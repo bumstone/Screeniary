@@ -7,23 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		055D0A0A2E01BC83009B01F1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 055D0A092E01BC83009B01F1 /* FirebaseAuth */; };
+		055D0A0C2E01BC83009B01F1 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 055D0A0B2E01BC83009B01F1 /* FirebaseCore */; };
+		055D0A0E2E01BC83009B01F1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 055D0A0D2E01BC83009B01F1 /* FirebaseFirestore */; };
+		055D0A102E01BC83009B01F1 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 055D0A0F2E01BC83009B01F1 /* FirebaseStorage */; };
+		055D0A132E01BD61009B01F1 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 055D0A122E01BD61009B01F1 /* GoogleSignIn */; };
+		055D0A152E01BD61009B01F1 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 055D0A142E01BD61009B01F1 /* GoogleSignInSwift */; };
+		055D0A1A2E01C1ED009B01F1 /* Screeniary.app in Resources */ = {isa = PBXBuildFile; fileRef = 055D0A192E01C1ED009B01F1 /* Screeniary.app */; };
 		058D581A2E005036006AE9A6 /* ImagePickerView in Frameworks */ = {isa = PBXBuildFile; productRef = 058D58192E005036006AE9A6 /* ImagePickerView */; };
 		058D581D2E005041006AE9A6 /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 058D581C2E005041006AE9A6 /* SVProgressHUD */; };
-		058D58212E00516D006AE9A6 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 058D58202E00516D006AE9A6 /* FirebaseAppCheck */; };
-		058D58232E00516D006AE9A6 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 058D58222E00516D006AE9A6 /* FirebaseAuth */; };
-		058D58252E00516D006AE9A6 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 058D58242E00516D006AE9A6 /* FirebaseDatabase */; };
-		058D58272E00516D006AE9A6 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 058D58262E00516D006AE9A6 /* FirebaseFirestore */; };
-		058D58292E00516D006AE9A6 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 058D58282E00516D006AE9A6 /* FirebaseFunctions */; };
-		058D582B2E00516D006AE9A6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 058D582A2E00516D006AE9A6 /* FirebaseStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		058D57FC2E0026A9006AE9A6 /* Screeniary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Screeniary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		055D0A192E01C1ED009B01F1 /* Screeniary.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = Screeniary.app; sourceTree = "<group>"; };
+		055D0A1E2E01C300009B01F1 /* Screeniary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Screeniary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		055D0A202E01C300009B01F1 /* Exceptions for "Screeniary" folder in "Screeniary" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 058D57FB2E0026A9006AE9A6 /* Screeniary */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		058D57FE2E0026A9006AE9A6 /* Screeniary */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				055D0A202E01C300009B01F1 /* Exceptions for "Screeniary" folder in "Screeniary" target */,
+			);
 			path = Screeniary;
 			sourceTree = "<group>";
 		};
@@ -34,14 +49,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				058D58252E00516D006AE9A6 /* FirebaseDatabase in Frameworks */,
-				058D58292E00516D006AE9A6 /* FirebaseFunctions in Frameworks */,
 				058D581D2E005041006AE9A6 /* SVProgressHUD in Frameworks */,
-				058D58212E00516D006AE9A6 /* FirebaseAppCheck in Frameworks */,
+				055D0A0A2E01BC83009B01F1 /* FirebaseAuth in Frameworks */,
+				055D0A0C2E01BC83009B01F1 /* FirebaseCore in Frameworks */,
+				055D0A152E01BD61009B01F1 /* GoogleSignInSwift in Frameworks */,
+				055D0A0E2E01BC83009B01F1 /* FirebaseFirestore in Frameworks */,
 				058D581A2E005036006AE9A6 /* ImagePickerView in Frameworks */,
-				058D582B2E00516D006AE9A6 /* FirebaseStorage in Frameworks */,
-				058D58232E00516D006AE9A6 /* FirebaseAuth in Frameworks */,
-				058D58272E00516D006AE9A6 /* FirebaseFirestore in Frameworks */,
+				055D0A102E01BC83009B01F1 /* FirebaseStorage in Frameworks */,
+				055D0A132E01BD61009B01F1 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +74,8 @@
 		058D57FD2E0026A9006AE9A6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				058D57FC2E0026A9006AE9A6 /* Screeniary.app */,
+				055D0A192E01C1ED009B01F1 /* Screeniary.app */,
+				055D0A1E2E01C300009B01F1 /* Screeniary.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -86,15 +102,15 @@
 			packageProductDependencies = (
 				058D58192E005036006AE9A6 /* ImagePickerView */,
 				058D581C2E005041006AE9A6 /* SVProgressHUD */,
-				058D58202E00516D006AE9A6 /* FirebaseAppCheck */,
-				058D58222E00516D006AE9A6 /* FirebaseAuth */,
-				058D58242E00516D006AE9A6 /* FirebaseDatabase */,
-				058D58262E00516D006AE9A6 /* FirebaseFirestore */,
-				058D58282E00516D006AE9A6 /* FirebaseFunctions */,
-				058D582A2E00516D006AE9A6 /* FirebaseStorage */,
+				055D0A092E01BC83009B01F1 /* FirebaseAuth */,
+				055D0A0B2E01BC83009B01F1 /* FirebaseCore */,
+				055D0A0D2E01BC83009B01F1 /* FirebaseFirestore */,
+				055D0A0F2E01BC83009B01F1 /* FirebaseStorage */,
+				055D0A122E01BD61009B01F1 /* GoogleSignIn */,
+				055D0A142E01BD61009B01F1 /* GoogleSignInSwift */,
 			);
 			productName = Screeniary;
-			productReference = 058D57FC2E0026A9006AE9A6 /* Screeniary.app */;
+			productReference = 055D0A1E2E01C300009B01F1 /* Screeniary.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -124,7 +140,8 @@
 			packageReferences = (
 				058D58182E005036006AE9A6 /* XCRemoteSwiftPackageReference "ImagePickerView" */,
 				058D581B2E005041006AE9A6 /* XCRemoteSwiftPackageReference "SVProgressHUD" */,
-				058D581E2E00511C006AE9A6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				055D0A072E01BBD4009B01F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				055D0A112E01BD61009B01F1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 058D57FD2E0026A9006AE9A6 /* Products */;
@@ -141,6 +158,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				055D0A1A2E01C1ED009B01F1 /* Screeniary.app in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +305,7 @@
 				DEVELOPMENT_TEAM = 56G3PL45LM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Screeniary/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -317,6 +336,7 @@
 				DEVELOPMENT_TEAM = 56G3PL45LM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Screeniary/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -360,6 +380,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		055D0A072E01BBD4009B01F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.14.0;
+			};
+		};
+		055D0A112E01BD61009B01F1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		058D58182E005036006AE9A6 /* XCRemoteSwiftPackageReference "ImagePickerView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ralfebert/ImagePickerView";
@@ -376,17 +412,39 @@
 				minimumVersion = 2.3.1;
 			};
 		};
-		058D581E2E00511C006AE9A6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 11.14.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		055D0A092E01BC83009B01F1 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 055D0A072E01BBD4009B01F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		055D0A0B2E01BC83009B01F1 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 055D0A072E01BBD4009B01F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		055D0A0D2E01BC83009B01F1 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 055D0A072E01BBD4009B01F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		055D0A0F2E01BC83009B01F1 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 055D0A072E01BBD4009B01F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		055D0A122E01BD61009B01F1 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 055D0A112E01BD61009B01F1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		055D0A142E01BD61009B01F1 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 055D0A112E01BD61009B01F1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		058D58192E005036006AE9A6 /* ImagePickerView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 058D58182E005036006AE9A6 /* XCRemoteSwiftPackageReference "ImagePickerView" */;
@@ -396,36 +454,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 058D581B2E005041006AE9A6 /* XCRemoteSwiftPackageReference "SVProgressHUD" */;
 			productName = SVProgressHUD;
-		};
-		058D58202E00516D006AE9A6 /* FirebaseAppCheck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 058D581E2E00511C006AE9A6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAppCheck;
-		};
-		058D58222E00516D006AE9A6 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 058D581E2E00511C006AE9A6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		058D58242E00516D006AE9A6 /* FirebaseDatabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 058D581E2E00511C006AE9A6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabase;
-		};
-		058D58262E00516D006AE9A6 /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 058D581E2E00511C006AE9A6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
-		};
-		058D58282E00516D006AE9A6 /* FirebaseFunctions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 058D581E2E00511C006AE9A6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFunctions;
-		};
-		058D582A2E00516D006AE9A6 /* FirebaseStorage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 058D581E2E00511C006AE9A6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
