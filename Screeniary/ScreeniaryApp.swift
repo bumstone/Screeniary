@@ -9,29 +9,19 @@ import SwiftUI
 import FirebaseStorage
 import FirebaseFirestore
 import FirebaseCore
+import GoogleSignIn
 
 @main
 struct ScreeniaryApp: App {
     
-    init(){
-        // firebase 연결
-        FirebaseApp.configure()
-        
-        // firestore에 저장
-        Firestore.firestore().collection("test").document("name").setData(["name": "Ko Bum Seouk"])
-
-        // storage에 이미지 저장
-        let image = UIImage(named: "Seoul")!
-        let imageData = image.jpegData(compressionQuality: 1.0)
-        let reference = Storage.storage().reference().child("test").child("Hansung")
-        let metaData = StorageMetadata()
-        metaData.contentType = "image/jpeg"
-        reference.putData(imageData!, metadata: metaData) { _ in }
-    }
+    // AppDelegate를 앱의 생명주기에 연결합니다.
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var authVM = AuthViewModel()
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environmentObject(authVM)
         }
     }
 }
