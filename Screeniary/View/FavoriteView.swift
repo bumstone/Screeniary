@@ -9,32 +9,35 @@ import SwiftUI
 
 struct FavoriteView: View {
     @EnvironmentObject var authVM: AuthViewModel
-    // 동일한 ViewModel을 공유받습니다.
     @EnvironmentObject var mediaVM: MediaViewModel
     
-    // ViewModel의 데이터를 기반으로 즐겨찾기 목록을 계산합니다.
-    var favoriteMedias: [Media] {
-        mediaVM.displayedMedias.filter { $0.isFavorite }
+    private var favoriteMedias: [Media] {
+        // ViewModel의 정렬 옵션에 따라 먼저 정렬된 후, 즐겨찾기만 필터링
+        let sortedMedias = mediaVM.displayedMedias
+        return sortedMedias.filter { $0.isFavorite }
     }
     
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
+                // 정렬 메뉴를 리스트 상단, 우측으로 배치합니다.
                 HStack {
                     Spacer()
                     SortOptionMenu(sortOption: $mediaVM.sortOption)
                 }
                 .padding(.horizontal)
+                .padding(.bottom, 8) // 리스트와의 간격
                 
                 if favoriteMedias.isEmpty {
                     VStack {
                         Image(systemName: "star.slash.fill")
                             .font(.largeTitle)
+                            .foregroundColor(.gray)
                         Text("즐겨찾기한 항목이 없습니다.")
                             .font(.headline)
                             .padding(.top)
+                            .foregroundColor(.gray)
                     }
-                    .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, maxHeight: .infinity) // 화면 중앙 정렬
                     
                 } else {
@@ -57,8 +60,8 @@ struct FavoriteView: View {
                     .listStyle(.plain)
                 }
             }
-            .navigationTitle("\(authVM.userNickname)님의 즐겨찾기")
-            .navigationBarTitleDisplayMode(.inline)
+            // .navigationTitle을 사용하여 큰 제목을 표시하고 왼쪽 정렬합니다.
+            .navigationTitle("Favorites")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("로그아웃") {
@@ -79,5 +82,5 @@ struct FavoriteView: View {
 #Preview {
     FavoriteView()
         .environmentObject(AuthViewModel())
-        .environmentObject(MediaViewModel())
+        .environmentObject(MediaViewModel(isPreview: true))
 }

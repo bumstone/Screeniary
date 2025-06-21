@@ -16,18 +16,18 @@ struct MainTabView: View {
             WatchListView()
                 .tabItem {
                     Image(systemName: "film.fill")
-                    Text("시청 기록")
+                    Text("Record")
                 }
             
-            Text("검색 화면")
+            SearchView()
                 .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("검색")
+                    Label("Search", systemImage: "magnifyingglass")
                 }
+            
             FavoriteView()
                 .tabItem {
                     Image(systemName: "star.fill")
-                    Text("즐겨찾기")
+                    Text("Favorites")
                 }
         }
         .environmentObject(mediaVM)
@@ -36,4 +36,5 @@ struct MainTabView: View {
 
 #Preview{
     MainTabView()
+        .environmentObject(AuthViewModel())
 }

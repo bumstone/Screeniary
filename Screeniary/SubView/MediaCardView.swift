@@ -1,5 +1,5 @@
 //
-//  MediaListView.swift
+//  MediaCardView.swift
 //  Screeniary
 //
 //  Created by 고범석 on 6/19/25.
@@ -11,11 +11,12 @@ struct MediaCardView: View {
     @Binding var media: Media
     var onToggleFavorite: () -> Void
     @State var image = UIImage()
-    let size = CGSize(width: 100, height: 100)
+    let size = CGSize(width: 120, height: 138)
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            NavigationLink(destination: Text("상세보기 임시 화면")) {
+            // NavigationLink의 destination을 실제 MediaDetailView로 연결
+            NavigationLink(destination: MediaDetailView(media: $media)) {
                 HStack(alignment: .top, spacing: 12) {
                     Image(uiImage: image)
                         .resizable()
@@ -44,8 +45,8 @@ struct MediaCardView: View {
                             ForEach(media.ottTags, id: \.self) { tag in
                                 Image(tag)
                                     .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                                    .frame(width: 40, height: 15)
+                                    .clipShape(RoundedRectangle(cornerRadius: 2))
                             }
                         }
                         
@@ -54,16 +55,17 @@ struct MediaCardView: View {
                     Spacer()
                 }
             }
+            .buttonStyle(.plain) // List에서 전체 영역이 눌리는 효과를 위해 추가
             
             VStack {
                 Button(action: {
-                    // 이제 dbFirebase를 직접 호출하는 대신,
-                    // 부모로부터 전달받은 onToggleFavorite 클로저를 실행하기만 합니다.
                     onToggleFavorite()
                 }) {
                     Image(systemName: media.isFavorite ? "bookmark.fill" : "bookmark")
                         .foregroundColor(.yellow)
+                        .font(.title2) // 아이콘 크기 키움
                 }
+                .buttonStyle(.borderless)
                 .padding(4)
                 
                 Spacer()
@@ -76,7 +78,7 @@ struct MediaCardView: View {
         .padding(8)
         .background(Color(.systemGray6))
         .cornerRadius(10)
-        .shadow(radius: 2)
+        .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
     }
 }
 
@@ -104,13 +106,13 @@ struct ProgressCircleView: View {
                 .foregroundColor(.blue)
             
             Circle()
-                .trim(from: 0, to: CGFloat(progress))
+                .trim(from: 0, to: CGFloat(min(max(progress, 0), 1))) // 0~1 사이 값 보장
                 .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
                 .foregroundColor(.blue)
                 .rotationEffect(.degrees(-90))
             
-            Text("\(Int(progress * 100))%")
-                .font(.caption2)
+//            Text("\(Int(progress * 100))%")
+//                .font(.caption2.bold())
         }
     }
 }
@@ -151,9 +153,10 @@ struct TagChipView: View {
         nickname: "고범석"
     )
     
-    // 변경된 init에 맞게 dbFirebase를 제거하고, onToggleFavorite에 빈 클로저를 전달합니다.
-    MediaCardView(media: .constant(mockMedia), onToggleFavorite: {
-        print("Favorite Toggled in Preview")
-    })
-    .padding()
+    return NavigationView {
+        MediaCardView(media: .constant(mockMedia), onToggleFavorite: {
+            print("Favorite Toggled in Preview")
+        })
+        .padding()
+    }
 }

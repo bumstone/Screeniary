@@ -1,5 +1,5 @@
 //
-//  MediaEntry.swift
+//  Media.swift
 //  Screeniary
 //
 //  Created by 고범석 on 6/19/25.
@@ -10,7 +10,7 @@ import Foundation
 import FirebaseFirestore
 
 struct Media: Identifiable, Codable, Equatable {
-    @DocumentID var id: String? // Firestore 문서 ID 자동 주입
+    @DocumentID var id: String?
     
     var title: String
     var genres: [String]
@@ -20,18 +20,19 @@ struct Media: Identifiable, Codable, Equatable {
     var rating: Double
     var progress: Double
     var episodes: Int
-    var watchDate: Date?
+    var watchDate: Date? // 사용자가 시청한 날짜
     var memo: String
     var thumbnailName: String?
     var isFavorite: Bool
     var nickname: String
-    
+    var creationDate: Date // 미디어 기록을 생성한 날짜 (정렬)
+
     static func == (lhs: Media, rhs: Media) -> Bool {
         return lhs.id == rhs.id
     }
     
     init(id: String? = nil,
-        title: String,
+         title: String,
          genres: [String],
          ottTags: [String],
          typeTags: [String],
@@ -43,7 +44,8 @@ struct Media: Identifiable, Codable, Equatable {
          memo: String,
          thumbnailName: String? = nil,
          isFavorite: Bool = false,
-         nickname: String
+         nickname: String,
+         creationDate: Date = Date() // 기본값을 현재 시간으로 설정
     ) {
         self.id = id
         self.title = title
@@ -59,6 +61,7 @@ struct Media: Identifiable, Codable, Equatable {
         self.thumbnailName = thumbnailName
         self.isFavorite = isFavorite
         self.nickname = nickname
+        self.creationDate = creationDate
     }
 }
 
@@ -78,11 +81,16 @@ extension Media {
             "thumbnailName": media.thumbnailName as Any,
             "isFavorite": media.isFavorite,
             "nickname": media.nickname,
-            "datetime": Date().timeIntervalSince1970
+            // creationDate를 Firestore에 저장합니다.
+            "creationDate": media.creationDate.timeIntervalSince1970
         ]
     }
     
     static func fromDict(dict: [String: Any], id: String) -> Media {
+        // Firestore에서 creationDate를 읽어옵니다.
+        // 만약 기존 데이터에 값이 없다면 현재 시간을 기본값으로 사용
+        let creationTimestamp = dict["creationDate"] as? TimeInterval ?? Date().timeIntervalSince1970
+        
         return Media(
             id: id,
             title: dict["title"] as! String,
@@ -97,7 +105,8 @@ extension Media {
             memo: dict["memo"] as! String,
             thumbnailName: dict["thumbnailName"] as? String,
             isFavorite: dict["isFavorite"] as! Bool,
-            nickname: dict["nickname"] as! String
+            nickname: dict["nickname"] as! String,
+            creationDate: Date(timeIntervalSince1970: creationTimestamp)
         )
     }
 }
@@ -105,14 +114,9 @@ extension Media {
 extension Media {
     func loadThumbnail(size: CGSize? = nil, completion: @escaping (UIImage) -> Void) {
         guard let imageName = thumbnailName, !imageName.isEmpty else {
-            // thumbnailName이 nil이거나 비어있으면 기본 이미지를 로드합니다.
-            // "defaultImage"는 Assets에 저장된 실제 기본 이미지 이름으로 변경해야 합니다.
             ImagePool.image(name: "noImage", size: size, completion: completion)
             return
         }
-        
-        // thumbnailName이 있으면 해당 이미지를 로드
         ImagePool.image(name: imageName, size: size, completion: completion)
     }
 }
-

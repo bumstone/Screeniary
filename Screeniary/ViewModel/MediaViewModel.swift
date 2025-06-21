@@ -34,8 +34,10 @@ class MediaViewModel: ObservableObject {
             return
         }
         // 프리뷰용 목업(Mock) 데이터를 생성합니다.
+        let now = Date()
         self.medias = [
             Media(
+                id: "preview-media-1",
                 title: "더 글로리",
                 genres: ["드라마", "스릴러"],
                 ottTags: ["Netflix"],
@@ -48,9 +50,11 @@ class MediaViewModel: ObservableObject {
                 memo: "프리뷰용 목업 데이터입니다.",
                 thumbnailName: "noImage",
                 isFavorite: true,
-                nickname: "고범석"
+                nickname: "고범석",
+                creationDate: now
             ),
             Media(
+                id: "preview-media-2",
                 title: "오징어 게임",
                 genres: ["스릴러", "액션"],
                 ottTags: ["Netflix"],
@@ -63,7 +67,8 @@ class MediaViewModel: ObservableObject {
                 memo: "아주 재미있게 봤습니다.",
                 thumbnailName: "noImage",
                 isFavorite: false,
-                nickname: "고범석"
+                nickname: "고범석",
+                creationDate: now.addingTimeInterval(-86400 * 5) // 5일 전 생성
             )
         ]
         sortMedia() // 정렬 함수를 호출하여 displayedMedias를 채웁니다.
@@ -73,7 +78,7 @@ class MediaViewModel: ObservableObject {
     func sortMedia() {
         switch sortOption {
         case .latest:
-            displayedMedias = medias.sorted { $0.watchDate ?? .distantPast > $1.watchDate ?? .distantPast }
+            displayedMedias = medias.sorted { $0.creationDate > $1.creationDate }
         case .rating:
             displayedMedias = medias.sorted { $0.rating > $1.rating }
         }
@@ -135,16 +140,15 @@ class MediaViewModel: ObservableObject {
         }
     }
     
-    private func setupFirebase() {
+    func setupFirebase() {
         if dbFirebase == nil {
             dbFirebase = DbFirebase(parentNotification: handleDbChange)
             dbFirebase?.setQuery(from: 1, to: 10000)
         }
     }
     
-    private func handleDbChange(dict: [String: Any]?, id: String?, dbaction: DbAction?) {
+    func handleDbChange(dict: [String: Any]?, id: String?, dbaction: DbAction?) {
         guard let dict = dict, let id = id, let dbaction = dbaction else { return }
-        // TODO: Firestore 문서 ID를 주입하는 로직을 DbFirebase 또는 여기서 처리해야 합니다.
         let media = Media.fromDict(dict: dict, id: id)
         
         // 데이터 변경은 항상 Main 스레드에서 처리하여 UI 업데이트 오류를 사전에 방지함.
@@ -168,14 +172,24 @@ class MediaViewModel: ObservableObject {
     
     // 즐겨찾기 토글 기능
     func toggleFavorite(for media: Media) {
-        // 복사본을 만들어 isFavorite 값을 변경
-        var updatedMedia = media
-        updatedMedia.isFavorite.toggle()
+        // ViewModel이 가진 원본 'medias' 배열에서 해당 항목의 인덱스를 찾습니다.
+        guard let index = medias.firstIndex(where: { $0.id == media.id }) else {
+            print("Error: Could not find media to toggle favorite.")
+            return
+        }
         
-        // Firestore에 변경사항을 저장
+        // 'medias' 배열의 해당 항목의 isFavorite 값을 직접 변경
+        // @Published 프로퍼티가 변경되었으므로, UI가 즉시 업데이트
+        medias[index].isFavorite.toggle()
+        
+        // 변경된 데이터 수신
+        let updatedMedia = medias[index]
+        
+        // 변경된 데이터를 Firestore에 저장합니다. (백그라운드 작업)
         if let id = updatedMedia.id {
             dbFirebase?.saveChange(key: id, object: Media.toDict(media: updatedMedia), action: .modify)
         }
     }
+    
     
 }

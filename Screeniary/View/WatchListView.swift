@@ -8,21 +8,17 @@
 import SwiftUI
 
 struct WatchListView: View {
-    // EnvironmentObject를 통해 MainTabView에서 생성한 ViewModel을 가져옵니다.
     @EnvironmentObject var mediaVM: MediaViewModel
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
                 HStack {
-                    Text("Screeniary")
-                        .font(.title.bold())
                     Spacer()
-                    // ViewModel의 sortOption을 바인딩하여 사용
                     SortOptionMenu(sortOption: $mediaVM.sortOption)
                 }
                 .padding(.horizontal)
-                .padding(.top, 8)
+                .padding(.bottom, 8)
                 
                 List {
                     // $를 사용하여 Binding 배열로 생성
@@ -42,7 +38,8 @@ struct WatchListView: View {
                 }
                 .listStyle(.plain)
             }
-            .navigationBarTitleDisplayMode(.inline)
+            // .navigationTitle을 사용하여 큰 제목을 표시하고 왼쪽 정렬합니다.
+            .navigationTitle("Media Record")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) { EditButton() }
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -57,5 +54,5 @@ struct WatchListView: View {
 
 #Preview {
     WatchListView()
-        .environmentObject(MediaViewModel()) // Preview에서도 주입해줍니다.
+        .environmentObject(MediaViewModel(isPreview: true))
 }

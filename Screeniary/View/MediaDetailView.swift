@@ -91,8 +91,8 @@ struct MediaDetailView: View {
                         ForEach(media.ottTags, id: \.self) { tag in
                             Image(tag)
                                 .resizable()
-                                .frame(width: 60, height: 20)
-                                .clipShape(RoundedRectangle(cornerRadius: 3))
+                                .frame(width: 60, height: 18)
+                                .clipShape(RoundedRectangle(cornerRadius: 2))
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
