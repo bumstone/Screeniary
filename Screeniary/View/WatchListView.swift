@@ -41,10 +41,12 @@ struct WatchListView: View {
             // .navigationTitle을 사용하여 큰 제목을 표시하고 왼쪽 정렬합니다.
             .navigationTitle("Media Record")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) { EditButton() }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink("추가") {
-                        MediaNewView()
+                    NavigationLink(destination: MediaNewView()) {
+                        Image(systemName: "plus.app")
                     }
                 }
             }

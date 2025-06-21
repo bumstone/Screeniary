@@ -81,14 +81,11 @@ extension Media {
             "thumbnailName": media.thumbnailName as Any,
             "isFavorite": media.isFavorite,
             "nickname": media.nickname,
-            // creationDate를 Firestore에 저장합니다.
             "creationDate": media.creationDate.timeIntervalSince1970
         ]
     }
     
     static func fromDict(dict: [String: Any], id: String) -> Media {
-        // Firestore에서 creationDate를 읽어옵니다.
-        // 만약 기존 데이터에 값이 없다면 현재 시간을 기본값으로 사용
         let creationTimestamp = dict["creationDate"] as? TimeInterval ?? Date().timeIntervalSince1970
         
         return Media(
