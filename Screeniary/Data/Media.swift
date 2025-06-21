@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 import FirebaseFirestore
 
-struct Media: Identifiable, Codable {
+struct Media: Identifiable, Codable, Equatable {
     @DocumentID var id: String? // Firestore 문서 ID 자동 주입
     
     var title: String
@@ -26,7 +26,12 @@ struct Media: Identifiable, Codable {
     var isFavorite: Bool
     var nickname: String
     
-    init(title: String,
+    static func == (lhs: Media, rhs: Media) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    init(id: String? = nil,
+        title: String,
          genres: [String],
          ottTags: [String],
          typeTags: [String],
@@ -40,6 +45,7 @@ struct Media: Identifiable, Codable {
          isFavorite: Bool = false,
          nickname: String
     ) {
+        self.id = id
         self.title = title
         self.genres = genres
         self.ottTags = ottTags
@@ -76,8 +82,9 @@ extension Media {
         ]
     }
     
-    static func fromDict(dict: [String: Any]) -> Media {
+    static func fromDict(dict: [String: Any], id: String) -> Media {
         return Media(
+            id: id,
             title: dict["title"] as! String,
             genres: dict["genres"] as! [String],
             ottTags: dict["ottTags"] as! [String],
@@ -97,11 +104,14 @@ extension Media {
 
 extension Media {
     func loadThumbnail(size: CGSize? = nil, completion: @escaping (UIImage) -> Void) {
-        guard let imageName = thumbnailName else {
-            completion(UIImage()) // 기본 이미지 반환
+        guard let imageName = thumbnailName, !imageName.isEmpty else {
+            // thumbnailName이 nil이거나 비어있으면 기본 이미지를 로드합니다.
+            // "defaultImage"는 Assets에 저장된 실제 기본 이미지 이름으로 변경해야 합니다.
+            ImagePool.image(name: "noImage", size: size, completion: completion)
             return
         }
         
+        // thumbnailName이 있으면 해당 이미지를 로드
         ImagePool.image(name: imageName, size: size, completion: completion)
     }
 }

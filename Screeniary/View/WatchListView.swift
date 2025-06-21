@@ -8,61 +8,54 @@
 import SwiftUI
 
 struct WatchListView: View {
-    @State var mediaList: [Media] = []
-    @State var dbFirebase: DbFirebase?
-
+    // EnvironmentObject를 통해 MainTabView에서 생성한 ViewModel을 가져옵니다.
+    @EnvironmentObject var mediaVM: MediaViewModel
+    
     var body: some View {
         NavigationView {
-            List {
-                ForEach($mediaList, id: \.id) { $media in
-                    MediaCardView(media: $media, dbFirebase: $dbFirebase)
+            VStack(spacing: 0) {
+                HStack {
+                    Text("Screeniary")
+                        .font(.title.bold())
+                    Spacer()
+                    // ViewModel의 sortOption을 바인딩하여 사용
+                    SortOptionMenu(sortOption: $mediaVM.sortOption)
                 }
-                .onDelete { indexSet in
-                    deleteMedia(indexSet: indexSet)
+                .padding(.horizontal)
+                .padding(.top, 8)
+                
+                List {
+                    // $를 사용하여 Binding 배열로 생성
+                    // 각 요소를 $media로 받아 사용
+                    ForEach($mediaVM.displayedMedias) { $media in
+                        MediaCardView(
+                            media: $media,
+                            onToggleFavorite: {
+                                // 즐겨찾기 버튼이 눌리면 ViewModel의 함수를 호출
+                                mediaVM.toggleFavorite(for: media)
+                            }
+                        )
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                    }
+                    .onDelete(perform: mediaVM.deleteMedia)
+                }
+                .listStyle(.plain)
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) { EditButton() }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink("추가") {
+                        MediaNewView()
+                    }
                 }
             }
-            .navigationTitle("시청 기록")
-            .navigationBarItems(
-                leading: EditButton(),
-                trailing: NavigationLink(destination: MediaNewView(dbFirebase: $dbFirebase, mediaList: $mediaList)) {
-                    Image(systemName: "plus.app")
-                }
-            )
-            .onAppear {
-                if dbFirebase == nil {
-                    dbFirebase = DbFirebase(parentNotification: handleDbChange)
-                    dbFirebase?.setQuery(from: 1, to: 10000)
-                }
-            }
-        }
-    }
-
-    func deleteMedia(indexSet: IndexSet) {
-        guard let index = indexSet.first else { return }
-        let media = mediaList[index]
-        dbFirebase?.saveChange(key: media.id ?? UUID().uuidString, object: Media.toDict(media: media), action: .delete)
-    }
-
-    func handleDbChange(dict: [String: Any]?, dbaction: DbAction?) {
-        guard let dict = dict, let dbaction = dbaction else { return }
-        let media = Media.fromDict(dict: dict)
-
-        switch dbaction {
-        case .add:
-            mediaList.append(media)
-        case .modify:
-            if let index = mediaList.firstIndex(where: { $0.id == media.id }) {
-                mediaList[index] = media
-            }
-        case .delete:
-            mediaList.removeAll { $0.id == media.id }
         }
     }
 }
 
-
-#Preview{
+#Preview {
     WatchListView()
+        .environmentObject(MediaViewModel()) // Preview에서도 주입해줍니다.
 }
-
-

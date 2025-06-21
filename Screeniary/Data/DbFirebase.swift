@@ -7,10 +7,10 @@ class DbFirebase: Database {
     // 데이터를 저장할 Firestore 컬렉션 위치
     var reference: CollectionReference = Firestore.firestore().collection("medias")
     
-    var parentNotification: (([String: Any]?, DbAction?) -> Void)?
+    var parentNotification: (([String: Any]?, String?, DbAction?) -> Void)?
     var existQuery: ListenerRegistration?
     
-    required init(parentNotification: (([String : Any]?, DbAction?) -> Void)?) {
+    required init(parentNotification: (([String : Any]?, String?, DbAction?) -> Void)?) {
         self.parentNotification = parentNotification
     }
     
@@ -41,6 +41,7 @@ class DbFirebase: Database {
 
         for documentChange in querySnapshot.documentChanges {
             let dict = documentChange.document.data()
+            let docID = documentChange.document.documentID
             var action: DbAction?
 
             switch documentChange.type {
@@ -53,7 +54,7 @@ class DbFirebase: Database {
             }
             
             // 등록된 parentNotification 클로저를 통해 변경 사항을 알림
-            parentNotification?(dict, action)
+            parentNotification?(dict, docID, action)
         }
     }
     

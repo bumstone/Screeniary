@@ -9,13 +9,13 @@ import SwiftUI
 
 struct MediaCardView: View {
     @Binding var media: Media
-    @Binding var dbFirebase: DbFirebase?
+    var onToggleFavorite: () -> Void
     @State var image = UIImage()
     let size = CGSize(width: 100, height: 100)
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            NavigationLink(destination: MediaDetailView(media: $media, dbFirebase: $dbFirebase)) {
+            NavigationLink(destination: Text("상세보기 임시 화면")) {
                 HStack(alignment: .top, spacing: 12) {
                     Image(uiImage: image)
                         .resizable()
@@ -23,7 +23,7 @@ struct MediaCardView: View {
                         .frame(width: size.width, height: size.height)
                         .cornerRadius(8)
                         .onAppear {
-                            ImagePool.image(name: media.thumbnailName ?? "default", size: size) { loadedImage in
+                            ImagePool.image(name: media.thumbnailName ?? "noImage", size: size) { loadedImage in
                                 self.image = loadedImage
                             }
                         }
@@ -57,10 +57,9 @@ struct MediaCardView: View {
             
             VStack {
                 Button(action: {
-                    media.isFavorite.toggle()
-                    if let id = media.id {
-                        dbFirebase?.saveChange(key: id, object: Media.toDict(media: media), action: .modify)
-                    }
+                    // 이제 dbFirebase를 직접 호출하는 대신,
+                    // 부모로부터 전달받은 onToggleFavorite 클로저를 실행하기만 합니다.
+                    onToggleFavorite()
                 }) {
                     Image(systemName: media.isFavorite ? "bookmark.fill" : "bookmark")
                         .foregroundColor(.yellow)
@@ -134,7 +133,7 @@ struct TagChipView: View {
     }
 }
 
-// 프리뷰
+
 #Preview(traits: .sizeThatFitsLayout) {
     let mockMedia = Media(
         title: "더 글로리",
@@ -151,8 +150,10 @@ struct TagChipView: View {
         isFavorite: true,
         nickname: "고범석"
     )
-    let dbFirebase = DbFirebase(parentNotification: { _, _ in })
     
-    MediaCardView(media: .constant(mockMedia), dbFirebase: .constant(dbFirebase))
-        .padding()
+    // 변경된 init에 맞게 dbFirebase를 제거하고, onToggleFavorite에 빈 클로저를 전달합니다.
+    MediaCardView(media: .constant(mockMedia), onToggleFavorite: {
+        print("Favorite Toggled in Preview")
+    })
+    .padding()
 }

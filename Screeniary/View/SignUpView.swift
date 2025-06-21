@@ -14,25 +14,25 @@ struct SignUpView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage = ""
-
+    
     var body: some View {
         VStack(spacing: 20) {
             Text("회원가입")
                 .font(.title.bold())
-
+            
             TextField("닉네임", text: $nickname)
                 .textFieldStyle(.roundedBorder)
-
+            
             TextField("이메일", text: $email)
                 .textFieldStyle(.roundedBorder)
-
+            
             SecureField("비밀번호", text: $password)
                 .textFieldStyle(.roundedBorder)
-
+            
             if !errorMessage.isEmpty {
                 Text(errorMessage).foregroundColor(.red)
             }
-
+            
             Button("회원가입 완료") {
                 Task {
                     do {
@@ -44,7 +44,7 @@ struct SignUpView: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-
+            
             Spacer()
         }
         .padding()
@@ -54,7 +54,7 @@ struct SignUpView: View {
 #Preview{
     NavigationView {
         SignUpView()
-            // 프리뷰에서 사용할 AuthViewModel의 인스턴스를 생성하여 주입합니다.
+        // 프리뷰에서 사용할 AuthViewModel의 인스턴스를 생성하여 주입합니다.
             .environmentObject(AuthViewModel())
     }
 }

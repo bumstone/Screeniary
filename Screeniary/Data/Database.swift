@@ -13,7 +13,7 @@ enum DbAction{
 
 protocol Database{
     // 생성자, 데이터베이스에 변경이 생기면 parentNotification를 호출하여 부모에게 알림
-    init(parentNotification: (([String:Any]?, DbAction?) -> Void)?)
+    init(parentNotification: (([String:Any]?, String?, DbAction?) -> Void)?)
     
     func setQuery(from: Any, to: Any)
     

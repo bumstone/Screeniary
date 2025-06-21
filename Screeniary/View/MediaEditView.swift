@@ -1,73 +1,80 @@
 //
-//  MediaNewView.swift
+//  MediaEditView.swift
 //  Screeniary
 //
-//  Created by 고범석 on 6/19/25.
+//  Created by 고범석 on 6/20/25.
 //
 
 import SwiftUI
 import PhotosUI
 
-struct MediaNewView: View {
+struct MediaEditView: View {
     @EnvironmentObject var mediaVM: MediaViewModel
-    @EnvironmentObject var authVM: AuthViewModel
-    @Environment(\.dismiss) var dismiss  // 이전 화면 이동시
+    @Environment(\.dismiss) var dismiss
+    @Binding var media: Media
     
-    @State private var title = ""
-    @State private var rating: Double = 0
-    @State private var progress: Double = 0
-    @State private var episodes: Int = 1
-    @State private var genres: [String] = []
-    @State private var ottTags: [String] = []
-    @State private var typeTag: String? = nil
-    @State private var watchStatus: String = "시청 전"
-    @State private var memo: String = ""
-    @State private var thumbnail: UIImage? = nil
+    @State private var title: String
+    @State private var rating: Double
+    @State private var progress: Double
+    @State private var episodes: Int
+    @State private var genres: [String]
+    @State private var ottTags: [String]
+    @State private var typeTag: String?
+    @State private var watchStatus: String
+    @State private var memo: String
+    @State private var thumbnail: UIImage?
+    @State private var thumbnailName: String
     @State private var selectedImageItem: PhotosPickerItem? = nil
+    
+    @State var image = UIImage()
     
     let availableGenres = ["액션", "코미디", "로맨스/멜로", "SF", "판타지", "애니메이션", "범죄/스릴러", "공포/미스터리", "드라마", "다큐멘터리", "음악/뮤지컬", "사극", "스포츠"]
     let availableOtts = ["Netflix", "Disney+", "Youtube", "CoupangPlay", "Watcha", "Tving", "Wavve", "AppleTV+"]
     let availableTypes = ["영화", "드라마", "다큐", "스포츠"]
     let availableWatchStatus = ["시청 예정", "시청 중", "시청 완료"]
     
+    let size = CGSize(width: 200, height: 200)
+    
+    init(media: Binding<Media>) {
+        self._media = media
+        // 기존 데이터로 초기화
+        self._title = State(initialValue: media.wrappedValue.title)
+        self._rating = State(initialValue: media.wrappedValue.rating)
+        self._progress = State(initialValue: media.wrappedValue.progress)
+        self._episodes = State(initialValue: media.wrappedValue.episodes)
+        self._genres = State(initialValue: media.wrappedValue.genres)
+        self._ottTags = State(initialValue: media.wrappedValue.ottTags)
+        self._typeTag = State(initialValue: media.wrappedValue.typeTags.first)
+        self._watchStatus = State(initialValue: media.wrappedValue.watchStatus)
+        self._memo = State(initialValue: media.wrappedValue.memo)
+        self._thumbnailName = State(initialValue: media.wrappedValue.thumbnailName ?? UUID().uuidString)
+    }
+    
     var body: some View {
         NavigationView {
-            // 생략된 import 및 변수는 그대로 유지
-            
             ScrollView {
                 VStack(spacing: 20) {
-                    // 썸네일
                     PhotosPicker(selection: $selectedImageItem, matching: .images) {
-                        if let thumbnail = thumbnail {
-                            Image(uiImage: thumbnail)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 200, height: 200)
-                                .cornerRadius(12)
-                        } else {
-                            VStack {
-                                Image(systemName: "photo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 80, height: 80)
-                                    .foregroundColor(.gray)
-                                Text("이미지 선택")
-                                    .foregroundColor(.gray)
-                            }
-                            .frame(width: 200, height: 200)
-                            .background(Color(.systemGray6))
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: size.width, height: size.height)
                             .cornerRadius(12)
-                        }
+                            .onAppear {
+                                ImagePool.image(name: media.thumbnailName ?? "noImage", size: size) { loaded in
+                                    image = loaded
+                                }
+                            }
                     }
                     .onChange(of: selectedImageItem) { newValue in
                         Task {
                             if let data = try? await newValue?.loadTransferable(type: Data.self),
-                               let image = UIImage(data: data) {
-                                thumbnail = image
+                               let loadedImage = UIImage(data: data) {
+                                thumbnail = loadedImage
+                                image = loadedImage
                             }
                         }
                     }
-                    
                     // 제목
                     TextField("제목", text: $title)
                         .textFieldStyle(.roundedBorder)
@@ -101,7 +108,7 @@ struct MediaNewView: View {
                         TagSelectionView(tags: availableOtts, mode: .multiple($ottTags))
                     }
                     
-                    // 유형
+                    // 유형 (왼쪽 정렬)
                     VStack(alignment: .leading, spacing: 16) {
                         Text("유형")
                             .font(.headline)
@@ -141,8 +148,7 @@ struct MediaNewView: View {
                 }
                 .padding()
             }
-            
-            .navigationTitle("미디어 추가")
+            .navigationTitle("미디어 수정")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -150,15 +156,10 @@ struct MediaNewView: View {
                         dismiss()
                     }
                 }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("저장") {
-                        mediaVM.addMedia(
-                            title: title, genres: genres, ottTags: ottTags, typeTags: typeTag.map { [$0] } ?? [],
-                            watchStatus: watchStatus, rating: rating, progress: progress, episodes: episodes,
-                            memo: memo, thumbnail: thumbnail, nickname: authVM.userNickname
-                        )
-                        // 저장 후 뷰 닫기
-                        dismiss()
+                        saveChanges()
                     }
                     .disabled(title.isEmpty)
                 }
@@ -166,12 +167,48 @@ struct MediaNewView: View {
         }
     }
     
+    // 객체 업데이트
+    private func saveChanges() {
+        media.title = title
+        media.rating = rating
+        media.progress = progress
+        media.episodes = episodes
+        media.genres = genres
+        media.ottTags = ottTags
+        media.typeTags = typeTag.map { [$0] } ?? []
+        media.watchStatus = watchStatus
+        media.memo = memo
+        media.thumbnailName = thumbnailName
+        
+        mediaVM.updateMedia(media: media, newThumbnail: thumbnail)
+        
+        dismiss()
+    }
 }
 
 #Preview {
-    NavigationView {
-        MediaNewView()
+    struct PreviewWrapper: View {
+        @State private var mockMedia = Media(
+            title: "더 글로리",
+            genres: ["드라마", "스릴러"],
+            ottTags: ["Netflix"],
+            typeTags: ["드라마"],
+            watchStatus: "시청 중",
+            rating: 4.0,
+            progress: 0.6,
+            episodes: 16,
+            watchDate: Date(),
+            memo: "재미있다",
+            thumbnailName: "noImage",
+            isFavorite: true,
+            nickname: "사용자"
+        )
+        
+        var body: some View {
+            MediaEditView(media: $mockMedia)
+                .environmentObject(MediaViewModel()) // ViewModel 주입
+        }
     }
-    .environmentObject(AuthViewModel())
-    .environmentObject(MediaViewModel(isPreview: true))
+    
+    return PreviewWrapper()
 }
