@@ -28,22 +28,27 @@ class DbFirebase: Database {
         if let query = existQuery {
             query.remove()
         }
-        // 필요에 따라 쿼리를 수정하세요. (e.g., order by timestamp)
-        let query = reference.order(by: "timestamp", descending: true)
+        // 정렬 기준 필드를 'timestamp'에서 실제 저장되는 'creationDate'로 수정합니다.
+        // 이제 최신순으로 생성된 데이터를 올바르게 불러옵니다.
+        let query = reference.order(by: "creationDate", descending: true)
         existQuery = query.addSnapshotListener(onChangingData)
     }
     
     // 리스너에 의해 데이터 변경이 감지되면 호출됨
     func onChangingData(querySnapshot: QuerySnapshot?, error: Error?) {
         guard let querySnapshot = querySnapshot else { return }
-
-        if querySnapshot.documentChanges.isEmpty { return }
-
+        
+        if querySnapshot.documentChanges.isEmpty {
+            // 이 로그는 데이터가 없는 경우를 확인하는 데 도움이 됩니다.
+            // print("No document changes found.")
+            return
+        }
+        
         for documentChange in querySnapshot.documentChanges {
             let dict = documentChange.document.data()
             let docID = documentChange.document.documentID
             var action: DbAction?
-
+            
             switch documentChange.type {
             case .added:
                 action = .add
@@ -61,13 +66,13 @@ class DbFirebase: Database {
     // UIImage를 PNG 데이터로 변환하여 Storage에 업로드
     static func uploadImage(imageName: String, image: UIImage?, completion: @escaping (Bool) -> Void) {
         let storageRef = Storage.storage().reference().child("medias").child(imageName)
-
+        
         guard let image = image else {
             // 이미지가 nil이면 Storage에서 해당 파일 삭제
             storageRef.delete { _ in completion(true) }
             return
         }
-
+        
         guard let pngData = image.pngData() else {
             completion(false)
             return
@@ -95,3 +100,4 @@ class DbFirebase: Database {
         }
     }
 }
+

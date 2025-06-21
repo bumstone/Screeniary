@@ -30,7 +30,7 @@ struct MediaEditView: View {
     
     let availableGenres = ["액션", "코미디", "로맨스/멜로", "SF", "판타지", "애니메이션", "범죄/스릴러", "공포/미스터리", "드라마", "다큐멘터리", "음악/뮤지컬", "사극", "스포츠"]
     let availableOtts = ["Netflix", "Disney+", "Youtube", "CoupangPlay", "Watcha", "Tving", "Wavve", "AppleTV+"]
-    let availableTypes = ["영화", "드라마", "다큐", "스포츠"]
+    let availableTypes = ["영화", "드라마", "예능", "다큐", "스포츠"]
     let availableWatchStatus = ["시청 예정", "시청 중", "시청 완료"]
     
     let size = CGSize(width: 200, height: 200)

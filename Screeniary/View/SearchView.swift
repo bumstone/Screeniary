@@ -42,7 +42,7 @@ struct SearchView: View {
     }
     
     // 필터링 버튼에 사용될 유형 목록
-    let availableTypes = ["영화", "드라마", "다큐", "스포츠"]
+    let availableTypes = ["영화", "드라마", "예능", "다큐", "스포츠"]
     
     var body: some View {
         NavigationView {
