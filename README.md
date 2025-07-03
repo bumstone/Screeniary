@@ -9,7 +9,7 @@
 
 ### Framework: SwiftUI
 
-### DB: Firebase (Firestore, Authentication, Storage 등)
+### DB: Firebase (Firestore, Authentication, Storage)
 
 
 ## ✨ 주요 기능
